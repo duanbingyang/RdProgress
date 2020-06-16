@@ -8,7 +8,7 @@ const asideMenuConfig = [
   {
     name: '项目列表',
     path: '/rdprogresslist',
-    icon: 'toggle-left',
+    icon: 'chart-bar',
   },
   {
     name: '***项目进度节点详情',

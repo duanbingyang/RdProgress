@@ -5,6 +5,8 @@
   "dependencies": {
     "@alifd/next": "^1.19.4",
     "@alifd/theme-design-pro": "^0.x",
+    "md5": "^2.2.1",
+    "md5js": "^1.0.7",
     "moment": "^2.24.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1"

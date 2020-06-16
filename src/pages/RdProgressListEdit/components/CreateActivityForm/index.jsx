@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 //without 路由跳转依赖结束
 import moment from 'moment';
 import styles from './index.module.scss';
+import {md5} from 'md5js';
 import {
   Input,
   Button,
@@ -15,6 +16,7 @@ import {
   Radio,
   Grid,
   Form,
+  Dialog,
 } from '@alifd/next';
 import axios from 'axios';
 import qs from 'qs';
@@ -26,9 +28,9 @@ const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
-// const rootUrl = 'http://localhost:3000'
+const rootUrl = 'http://localhost:3000'
 //腾讯云服务地址
-const rootUrl = 'http://49.234.40.20:3000'  
+// const rootUrl = 'http://49.234.40.20:3000'  
 
 
 const formItemLayout = {
@@ -51,6 +53,8 @@ export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      fullyCustomizedVisible: false,
+      viewId: '00001',
       value: {
         projectName: 'test',
         initTime: '',
@@ -69,6 +73,12 @@ export default class Index extends Component {
     });
   };
 
+  onOpenFullyCustomized = () => {
+    this.setState({
+        fullyCustomizedVisible: true
+    });
+  };
+
   reset = () => {
 
   };
@@ -81,15 +91,27 @@ export default class Index extends Component {
       const _this = this
       axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
       value.initTime = moment(value.initTime).unix()
+      value.viewCode = md5(value.projectName)
       axios.post(`${rootUrl}/api/addProgress`, qs.stringify(value))
       .then(res=>{
-          console.log('res=>',res);
-          _this.props.history.push('/rdprogresslist')         
+          _this.setState({
+            viewId: value.viewCode
+          })
+          _this.onOpenFullyCustomized()     
       })
       .catch(error=>{
           console.log('res=>',error);            
       })
+
+
     }
+  };
+
+  onCloseFullyCustomized = () => {
+    this.setState({
+        fullyCustomizedVisible: false
+    });
+    this.props.history.push('/rdprogresslist')    
   };
 
   render() {
@@ -153,12 +175,21 @@ export default class Index extends Component {
               <FormItem {...formItemLayout} label=" ">
                 <Form.Submit type="primary" validate onClick={this.submit}>
                   立即创建
-                  </Form.Submit>
+                </Form.Submit>
                 <Form.Reset className={styles.resetBtn} onClick={this.reset}>
                   重置
-                  </Form.Reset>
+                </Form.Reset>
               </FormItem>
           </Form>
+          <Dialog
+            title="项目添加成功"
+            footer={<Button warning type="primary" onClick={this.onCloseFullyCustomized}>我已复制</Button>}
+            visible={this.state.fullyCustomizedVisible}
+            onOk={this.onCloseFullyCustomized}
+            onCancel={this.onCloseFullyCustomized}
+            onClose={this.onCloseFullyCustomized}>
+            该项目的查看密码为<p style={{fontSize: '30px',fontWeight:700,marginBottom: '30px'}}>{this.state.viewId}</p>请将此密码粘贴至云之家流程单中
+        </Dialog>
         </div>
       </div>
     );
