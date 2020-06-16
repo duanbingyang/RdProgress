@@ -1,0 +1,18 @@
+{
+  "plugins": [
+    [
+      "build-plugin-fusion",
+      {
+        "themePackage": "@icedesign/theme"
+      }
+    ],[
+      "build-plugin-moment-locales",
+      {
+        "locales": [
+          "zh-cn"
+        ]
+      }
+    ],
+    "build-plugin-ice-auth"
+  ]
+}

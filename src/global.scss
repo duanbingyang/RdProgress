@@ -1,0 +1,81 @@
+// 引入默认全局样式
+@import '@alifd/next/reset.scss';
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+.RdStepBox:last-child .next-step .next-step-item .next-step-item-body{
+  width: 174px!important;
+}
+.RdStepBox .next-step .progressChildNodeDone{
+  .next-step-item-container .next-step-item-node-dot {
+    background: #FFF;
+    border-color: #00CB15;
+    border-width: 2px;
+  }
+  .next-step-item-tail-overlay {
+    background: #00CB15;
+  }
+  .next-step-item-container .next-step-item-node {
+    color: #00CB15;
+  }
+}
+.RdStepBox .next-step .progressChildNodeDoing{
+  .next-step-item-container .next-step-item-node-dot {
+    background: #00CB15;
+    border-color: #00CB15;
+  }
+  .next-step-item-tail-overlay {
+    background: #C4C6CF;
+  }
+}
+.RdStepBox .next-step .progressChildNode{
+  .next-step-item-container .next-step-item-node-dot {
+    background: #FFFFFF;
+    border-color: #A0A2AD;
+  }
+  .next-step-item-tail-overlay {
+    background: #C4C6CF;
+  }
+}
+.mainProgressComp .next-step .mainProgressNodeDone{
+  .next-step-item-container .next-step-item-node-circle {
+    background: #FFFFFF;
+    border-color: #00CB15;
+  }
+  .next-icon-select:before {
+    content: "\E632";
+  }
+  .next-step-item-container .next-step-item-node {
+    color: #00CB15;
+  }
+  .next-step-item-tail-overlay {
+    background: #00CB15;
+  }
+}
+.mainProgressComp .next-step .mainProgressNodeDoing{
+  .next-step-item-container .next-step-item-node {
+    color: #FFFFFF;
+  }
+  .next-step-item-container .next-step-item-node-circle {
+    background: #00CB15;
+    border-color: #00CB15;
+    font-weight: 900;
+  }
+  .next-step-item-tail-overlay {
+    background: #C4C6CF;
+  }
+}
+.mainProgressComp .next-step .mainProgressNode{
+  .next-step-item-container .next-step-item-node {
+    color: #666666;
+  }
+  .next-step-item-container .next-step-item-node-circle {
+    background: #FFFFFF;
+    border-color: #A0A2AD;
+  }
+  .next-step-item-tail-overlay {
+    background: #C4C6CF;
+  }
+}

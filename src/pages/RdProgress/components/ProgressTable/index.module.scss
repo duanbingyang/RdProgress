@@ -1,0 +1,33 @@
+.paginationWrapper{
+  display: flex;
+  padding: 20px 0 0;
+  flex-direction: row-reverse;
+}
+
+.operationItem{
+  margin-right: 12px;
+  text-decoration: none;
+  color: #5485F7;
+};
+
+.overMoney{
+  display: inline-block;
+  padding: 2px 6px;
+  border: 2px solid #FF6600;
+  color: #FF6600;
+  height: 20px;
+  line-height: 15px;
+  margin-right: 5px;
+  border-radius: 4px;
+}
+
+.overTime{
+  display: inline-block;
+  padding: 2px 6px;
+  border: 2px solid #FF3399;
+  color: #FF3399;
+  height: 20px;
+  line-height: 15px;
+  margin-right: 5px;
+  border-radius: 4px;
+}
