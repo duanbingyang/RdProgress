@@ -54,9 +54,9 @@ export default class Index extends Component {
     super(props);
     this.state = {
       fullyCustomizedVisible: false,
-      viewId: '00001',
+      viewId: '',
       value: {
-        projectName: 'test',
+        projectName: '',
         initTime: '',
         department: '',
         submitPerson: '',
@@ -108,10 +108,17 @@ export default class Index extends Component {
   };
 
   onCloseFullyCustomized = () => {
+    const { history } = this.props;
     this.setState({
         fullyCustomizedVisible: false
     });
-    this.props.history.push('/rdprogresslist')    
+    history.push({
+      pathname: '/rdprogresslist', // 待跳转的页面URL
+      state: { 
+        viewCode: this.state.viewId
+      }, 
+    })
+    // this.props.history.push('/rdprogresslist')    
   };
 
   render() {
@@ -122,64 +129,68 @@ export default class Index extends Component {
             value={this.state.value}
             onChange={this.onFormChange}
           >
-              <FormItem {...formItemLayout} label="项目名称："
-                required
-                requiredMessage="项目名称必须填写"
-              >
-                <Input name="projectName" className={styles.inputWidth} />
-              </FormItem>
+            <FormItem {...formItemLayout} label="项目名称："
+              required
+              requiredMessage="项目名称必须填写"
+            >
+              <Input name="projectName" className={styles.inputWidth} />
+            </FormItem>
 
-              <FormItem {...formItemLayout} label="申请时间：" >
-                <DatePicker name="initTime" />
-              </FormItem>
+            <FormItem {...formItemLayout} label="申请时间：" 
+              required
+              requiredMessage="申请时间必须填写">
+              <DatePicker name="initTime" />
+            </FormItem>
 
-              <FormItem {...formItemLayout} label="所属部门：">
-                <Select
-                  name="department"
-                  dataSource={[
-                    { label: '制剂研发部', value: 'location1' },
-                    { label: '包材研发部', value: 'location2' },
-                    { label: '合成研发部', value: 'location3' },
-                  ]}
-                />
-              </FormItem>
+            <FormItem {...formItemLayout} label="所属部门："
+              required
+              requiredMessage="项目所属部门必须填写">
+              <Select
+                name="department"
+                dataSource={[
+                  { label: '制剂研发部', value: 'location1' },
+                  { label: '包材研发部', value: 'location2' },
+                  { label: '合成研发部', value: 'location3' },
+                ]}
+              />
+            </FormItem>
 
-              
-              <FormItem {...formItemLayout} label="提交人："
-                required
-                requiredMessage="提交人必须填写"
-              >
-                <Input name="submitPerson" className={styles.inputWidth} />
-              </FormItem>
-              
-              <FormItem {...formItemLayout} label="项目经理："
-                required
-                requiredMessage="项目经理必须填写"
-              >
-                <Input name="projectManager" className={styles.inputWidth} />
-              </FormItem>
-              
-              <FormItem {...formItemLayout} label="研发平台负责人："
-                required
-                requiredMessage="研发平台负责人必须填写"
-              >
-                <Input name="RD_Manager" className={styles.inputWidth} />
-              </FormItem>
+            
+            <FormItem {...formItemLayout} label="提交人："
+              required
+              requiredMessage="提交人必须填写"
+            >
+              <Input name="submitPerson" className={styles.inputWidth} />
+            </FormItem>
+            
+            <FormItem {...formItemLayout} label="项目经理："
+              required
+              requiredMessage="项目经理必须填写"
+            >
+              <Input name="projectManager" className={styles.inputWidth} />
+            </FormItem>
+            
+            <FormItem {...formItemLayout} label="研发平台负责人："
+              required
+              requiredMessage="研发平台负责人必须填写"
+            >
+              <Input name="RD_Manager" className={styles.inputWidth} />
+            </FormItem>
 
-              <FormItem {...formItemLayout} label="项目预算："
-                required
-                requiredMessage="项目预算必须填写"
-              >
-                <Input name="money" className={styles.inputWidth} />
-              </FormItem>
-              <FormItem {...formItemLayout} label=" ">
-                <Form.Submit type="primary" validate onClick={this.submit}>
-                  立即创建
-                </Form.Submit>
-                <Form.Reset className={styles.resetBtn} onClick={this.reset}>
-                  重置
-                </Form.Reset>
-              </FormItem>
+            <FormItem {...formItemLayout} label="项目预算："
+              required
+              requiredMessage="项目预算必须填写"
+            >
+              <Input name="money" className={styles.inputWidth} />
+            </FormItem>
+            <FormItem {...formItemLayout} label=" ">
+              <Form.Submit type="primary" validate onClick={this.submit}>
+                立即创建
+              </Form.Submit>
+              <Form.Reset className={styles.resetBtn} onClick={this.reset}>
+                重置
+              </Form.Reset>
+            </FormItem>
           </Form>
           <Dialog
             title="项目添加成功"

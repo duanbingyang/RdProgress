@@ -11,9 +11,9 @@ import styles from  './index.module.scss'
 import axios from 'axios'
 import qs from 'qs'
 import emitter from "./../../ev"
-// const rootUrl = 'http://localhost:3000'   
+const rootUrl = 'http://localhost:3000'   
 //腾讯云服务地址
-const rootUrl = 'http://49.234.40.20:3000'  
+// const rootUrl = 'http://49.234.40.20:3000'  
 
 @withRouter
 export default class ProgressTable extends Component {
@@ -80,7 +80,7 @@ export default class ProgressTable extends Component {
     })
   }
 
-  deleteItem = (record, index, e) => {
+  deleteItem = (record, e) => {
     e.preventDefault();
     const _this = this
     let submitData = {
@@ -102,13 +102,52 @@ export default class ProgressTable extends Component {
     this.props.history.push('/rdprogress?id=' + record.id)
   }
 
+  auditChange = (id, audit) => {
+    let pageData = this.state.dataSource
+    console.log(audit)
+    for(let i = 0; i < pageData.length; i++){
+      if(pageData[i]['id'] == id) {
+        pageData[i]['progressAudit'] = audit
+      }
+    }
+    this.setState({
+      dataSource: pageData
+    })
+  }
+
+  auditClick = (record, e) => {
+    e.preventDefault();
+    const _this = this
+    let value = {}
+    value.id = record.id
+    value.progressAudit = !record.progressAudit
+    console.log(value)
+
+    axios.post(`${rootUrl}/api/auth`, qs.stringify(value))
+    .then(res=>{
+      _this.auditChange(record.id, !record.progressAudit)    
+    })
+    .catch(error=>{
+        console.log('res=>',error);            
+    })
+  }
+
   renderProgressStatus= (value, index, record) => {
-    const _progressPlanTime = this.state.dataSource[index]['progressTime']
-    const _progressFinishTime = this.state.dataSource[index]['progressDeadline'] && !isNaN(this.state.dataSource[index]['progressDeadline']) ? this.state.dataSource[index]['progressDeadline'] : 0
-    const _progressPlanMoney = this.state.dataSource[index]['progressMoney']
-    const _progressrealMoney = this.state.dataSource[index]['progressRealMoney']
+    const _data = this.state.dataSource[index]
+    const _progressPlanTime = _data['progressTime']
+    const _progressFinishTime = _data['progressDeadline'] && !isNaN(_data['progressDeadline']) ? _data['progressDeadline'] : 0
+    const _progressPlanMoney = _data['progressMoney']
+    const _progressrealMoney = _data['progressRealMoney']
+    const _progressAudit = _data['progressAudit'] ? true : false
     const jsx = []
     let i = 0
+    if(_progressAudit) {
+      jsx.push(<span key={i} className={styles.auditTrue}>已审核</span>)
+      i++
+    }else{
+      jsx.push(<span key={i} className={styles.auditFalse}>未审核</span>)
+      i++
+    }
     if(_progressPlanMoney - _progressrealMoney < 0) {
       jsx.push(<span key={i} className={styles.overMoney}>超预算</span>)
       i++
@@ -123,6 +162,7 @@ export default class ProgressTable extends Component {
   }
 
   renderOperations = (value, index, record) => {
+    const _data = this.state.dataSource[index]
     return (
       <div
         className="filter-table-operation"
@@ -139,18 +179,18 @@ export default class ProgressTable extends Component {
         {/* <a href={'/#/rdprogress?id=' + record.id} className={styles.operationItem}>
           详情
         </a> */}
-        {/* <a 
+        <a 
           href='#' 
           className={styles.operationItem}
-          onClick = {this.detailClick.bind(this, record)}
+          onClick = {this.auditClick.bind(this, record)}
         >
-          详情
-        </a> */}
+          {_data.progressAudit ? '驳回' : '通过'}
+        </a>
         <a 
           href="#" 
           className={styles.operationItem}
           target="_blank"
-          onClick={this.deleteItem.bind(this, record, index)}
+          onClick={this.deleteItem.bind(this, record)}
         >
           删除
         </a>

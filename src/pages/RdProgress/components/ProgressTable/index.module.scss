@@ -17,7 +17,7 @@
   color: #FF6600;
   height: 20px;
   line-height: 15px;
-  margin-right: 5px;
+  margin: 1px 5px 1px 0;
   border-radius: 4px;
 }
 
@@ -28,6 +28,28 @@
   color: #FF3399;
   height: 20px;
   line-height: 15px;
-  margin-right: 5px;
+  margin: 1px 5px 1px 0;
+  border-radius: 4px;
+}
+
+.auditFalse{
+  display: inline-block;
+  padding: 2px 6px;
+  border: 2px solid #cc0000;
+  color: #cc0000;
+  height: 20px;
+  line-height: 15px;
+  margin: 1px 5px 1px 0;
+  border-radius: 4px;
+}
+
+.auditTrue{
+  display: inline-block;
+  padding: 2px 6px;
+  border: 2px solid #00CB15;
+  color: #00CB15;
+  height: 20px;
+  line-height: 15px;
+  margin: 1px 5px 1px 0;
   border-radius: 4px;
 }

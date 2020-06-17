@@ -6,11 +6,11 @@ import PropTypes from 'prop-types'
 //without 路由跳转依赖结束
 import moment from 'moment'
 import axios from 'axios'
-import { Table, Pagination } from '@alifd/next'
+import { Table, Pagination, Dialog, Input } from '@alifd/next'
 import styles from './index.module.scss'
-// const rootUrl = 'http://localhost:3000'
+const rootUrl = 'http://localhost:3000'
 //腾讯云服务地址
-const rootUrl = 'http://49.234.40.20:3000'  
+// const rootUrl = 'http://49.234.40.20:3000'  
 
 @withRouter
 export default class EnhanceTable extends Component {
@@ -24,22 +24,31 @@ export default class EnhanceTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: [{
-        projectName: 'test',
-        initTime: 1593446400,
-        department: '制剂研发部',
-        submitPerson: '1',
-        projectManager: '2',
-        RD_Manager: '3',
-        money: '4',
-        id: '',
-      }],
+      visible: false,
+      input: '',
+      value: [],
     };
   }
 
+  componentWillMount() {
+  }
+
   componentDidMount() {
+    // this.axiosForList()
+    if(this.props.location.state && this.props.location.state.viewCode) {
+      console.log(this.props.location.state.viewCode, '========================')
+      this.axiosForList(this.props.location.state.viewCode)
+    }else{
+      this.setState({
+        visible: true
+      })
+    }
+  }
+
+  axiosForList = (viewCode) => {
     const _this = this;
-    axios.get(`${rootUrl}/api/projectList`)
+    const getUrl = viewCode ? `${rootUrl}/api/projectListUseId?viewCode=` + viewCode : `${rootUrl}/api/projectList`
+    axios.get(getUrl)
         .then(function (response) {
            console.log(response)
             _this.setState({
@@ -76,6 +85,25 @@ export default class EnhanceTable extends Component {
     e.preventDefault();
     this.props.history.push('/rdprogress?id=' + record.id)
   }
+
+  onOpen = () => {
+    this.setState({
+        visible: true
+    });
+  };
+  
+  onClose = () => {
+    this.setState({
+        visible: false
+    });
+  };
+
+  onOk = () => {
+    this.setState({
+        visible: false
+    });
+    this.state.input ? this.axiosForList(this.state.input) : false
+  };
 
   renderOperations = (value, index, record) => {
     return (
@@ -116,6 +144,12 @@ export default class EnhanceTable extends Component {
       location3: '合成研发部'
     }
     return model[data]
+  }
+
+  inputChange = (value)=> {
+    this.setState({
+      input: value
+    })
   }
 
   render() {
@@ -183,6 +217,22 @@ export default class EnhanceTable extends Component {
               cell={this.renderOperations}
             />
           </Table>
+          <Dialog
+            title="查看项目"
+            visible={this.state.visible}
+            autoFocus
+            onOk={this.onOk.bind(this, 'okClick')}
+            onCancel={this.onClose.bind(this, 'cancelClick')}
+            onClose={this.onClose}
+            cancelProps={{'aria-label':'cancel'}}
+            okProps={{'aria-label':'ok'}}>
+            <Input 
+              placeholder="请输入【云之家单据】中的查看码" 
+              aria-label="Medium" 
+              aria-labelledby="J_InputMedium" 
+              onChange={this.inputChange.bind(this)}
+            />
+          </Dialog>
           {/* <div className={styles.paginationWrapper}>
             <Pagination />
           </div> */}
