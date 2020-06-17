@@ -50,6 +50,7 @@ export default class Index extends Component {
     super(props);
     this.state = {
       pageId: '',
+      mainProjectName: '',
       value: {
         projectName: '',
         progressId: '',
@@ -66,8 +67,10 @@ export default class Index extends Component {
 
   componentDidMount() {
     let id = this.props.location.state.pageId;
+    let mainProjectName = this.props.location.state.mainProjectName;
     this.setState({
-      pageId: id
+      pageId: id,
+      mainProjectName: mainProjectName
     })
   }
 
@@ -84,7 +87,7 @@ export default class Index extends Component {
 
   
   pageJump = (obj) => {
-    this.props.history.push('/rdprogress?id=' + obj.data.pageId)
+    this.props.history.push(`/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}`)
   }
 
   submit = (value, error) => {
@@ -103,7 +106,8 @@ export default class Index extends Component {
           _this.pageJump({
             url: '/rdprogress?id=' + _this.state.pageId,
             data: {
-              pageId: _this.state.pageId
+              pageId: _this.state.pageId,
+              mainProjectName: _this.state.mainProjectName
             }
           })          
       })

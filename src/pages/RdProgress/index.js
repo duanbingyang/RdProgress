@@ -15,6 +15,7 @@ export default class RdPrograss extends Component {
     this.state = {
       value: '',
       pageId: URL.parse(this.props.location.search, true).query.id,
+      projectName: URL.parse(this.props.location.search, true).query.name,
       currentStep: 0
     };
   }
@@ -46,9 +47,10 @@ export default class RdPrograss extends Component {
   render() {
     return (
       !this.state.value ? "loading" : <div className="rd-prograss-page">
-        <SimpleStep componentData={this.state.value} pageId={this.state.pageId} nodeClickCallback={this.nodeNumCallback.bind(this)}/>
+        <p style={{fontSize:'30px'}}>{this.state.projectName}</p>
+        <SimpleStep componentData={this.state.value} mainProjectName={this.state.projectName} pageId={this.state.pageId} nodeClickCallback={this.nodeNumCallback.bind(this)}/>
         {/* 进度条表格 */}
-        <ProgressTable componentData={this.state.value} pageId={this.state.pageId} />
+        <ProgressTable componentData={this.state.value} mainProjectName={this.state.projectName} pageId={this.state.pageId} />
       </div>
     );
   }

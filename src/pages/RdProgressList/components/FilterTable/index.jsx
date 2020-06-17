@@ -47,13 +47,21 @@ export default class EnhanceTable extends Component {
 
   axiosForList = (viewCode) => {
     const _this = this;
+    const { history } = this.props;
     const getUrl = viewCode ? `${rootUrl}/api/projectListUseId?viewCode=` + viewCode : `${rootUrl}/api/projectList`
     axios.get(getUrl)
         .then(function (response) {
-           console.log(response)
+           console.log(response.data.data[0]['projectName'])
             _this.setState({
               value: response.data.data,
             });
+            // history.push({
+            //   pathname: `/rdprogress?id=${response.data.data[0]['id']}`, // 待跳转的页面URL
+            //   state: { 
+            //     id: response.data.data[0]['id']
+            //   }, 
+            // })
+            history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}`)  
         })
         .catch(function (error) {
             console.log(error);

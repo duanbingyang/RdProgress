@@ -40,7 +40,10 @@ export default class ProgressTable extends Component {
     const { history } = this.props;
     history.push({
       pathname: '/rdprogressadd', // 待跳转的页面URL
-      state: { pageId: this.props.pageId }, // 跳转时传入的参数
+      state: { 
+        pageId: this.props.pageId,
+        mainProjectName: this.props.mainProjectName
+      }, 
     })
   }
 
@@ -60,7 +63,8 @@ export default class ProgressTable extends Component {
       state: { 
         pageId: this.props.pageId,
         progressId: record.progressId,
-        dataId: record.id
+        dataId: record.id,
+        mainProjectName: this.props.mainProjectName
       }, // 跳转时传入的参数
     })
   };

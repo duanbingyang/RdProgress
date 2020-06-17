@@ -51,6 +51,7 @@ export default class Index extends Component {
     super(props);
     this.state = {
       pageId: '',
+      mainProjectName: '',
       value: {
         projectName: 'test',
         progressId: '1.1',
@@ -70,6 +71,7 @@ export default class Index extends Component {
     const _this = this
     let id = this.props.location.state.dataId
     let pageId = this.props.location.state.pageId
+    let mainProjectName = this.props.location.state.mainProjectName
     axios.get(`${rootUrl}/api/selectProgressNodeUseId?id=${id}`)
       .then(res=>{
           console.log('res=>',res)
@@ -79,7 +81,8 @@ export default class Index extends Component {
           _this.progressDeadline = pageData.progressDeadline
           _this.progressRealMoney = pageData.progressRealMoney
           _this.setState({
-            value: res.data.data[0]
+            value: res.data.data[0],
+            mainProjectName: mainProjectName
           })
       })
       .catch(error=>{
@@ -107,7 +110,7 @@ export default class Index extends Component {
 
   
   pageJump = (obj) => {
-    this.props.history.push('/rdprogress?id=' + obj.data.pageId)
+    this.props.history.push(`/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}`)
   }
 
   submit = (value, error) => {
@@ -126,7 +129,8 @@ export default class Index extends Component {
           _this.pageJump({
             url: '/rdprogress?id=' + _this.state.pageId,
             data: {
-              pageId: _this.state.pageId
+              pageId: _this.state.pageId,
+              mainProjectName: _this.state.mainProjectName
             }
           })          
       })
