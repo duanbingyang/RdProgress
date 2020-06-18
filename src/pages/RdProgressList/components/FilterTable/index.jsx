@@ -51,7 +51,7 @@ export default class EnhanceTable extends Component {
     const getUrl = viewCode ? `${rootUrl}/api/projectListUseId?viewCode=` + viewCode : `${rootUrl}/api/projectList`
     axios.get(getUrl)
         .then(function (response) {
-           console.log(response.data.data[0]['projectName'])
+           console.log(response.data.data[0])
             _this.setState({
               value: response.data.data,
             });
@@ -61,7 +61,7 @@ export default class EnhanceTable extends Component {
             //     id: response.data.data[0]['id']
             //   }, 
             // })
-            history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}`)  
+            history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}&projectAudit=${response.data.data[0]['audit']}`)  
         })
         .catch(function (error) {
             console.log(error);

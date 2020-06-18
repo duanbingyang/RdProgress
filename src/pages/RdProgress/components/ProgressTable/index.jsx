@@ -11,9 +11,9 @@ import styles from  './index.module.scss'
 import axios from 'axios'
 import qs from 'qs'
 import emitter from "./../../ev"
-// const rootUrl = 'http://localhost:3000'
+const rootUrl = 'http://localhost:3000'
 //腾讯云服务地址
-const rootUrl = 'http://49.234.40.20:3000'
+// const rootUrl = 'http://49.234.40.20:3000'
 
 @withRouter
 export default class ProgressTable extends Component {
@@ -27,8 +27,11 @@ export default class ProgressTable extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props, '=================')
     this.state = {
+      projectAudit: this.props.projectAudit ? this.props.projectAudit : 0,
       input: '',
+      projectInput: '',
       canEdit: false,
       visible: false,
       inputState: 'error',
@@ -46,7 +49,9 @@ export default class ProgressTable extends Component {
       pathname: '/rdprogressadd', // 待跳转的页面URL
       state: { 
         pageId: this.props.pageId,
-        mainProjectName: this.props.mainProjectName
+        textCustomizedVisible: false,
+        mainProjectName: this.props.mainProjectName,
+        projectAudit: this.state.projectAudit
       }, 
     })
   }
@@ -68,8 +73,9 @@ export default class ProgressTable extends Component {
         pageId: this.props.pageId,
         progressId: record.progressId,
         dataId: record.id,
-        mainProjectName: this.props.mainProjectName
-      }, // 跳转时传入的参数
+        mainProjectName: this.props.mainProjectName,
+        projectAudit: this.state.projectAudit
+      }, 
     })
   };
 
@@ -82,32 +88,27 @@ export default class ProgressTable extends Component {
       }
     }
 
-
     this.setState({
       dataSource: pageData
     })
   }
 
-  deleteItem = (record, e) => {
-    e.preventDefault();
-    const _this = this
-    let submitData = {
-      'id': record.id
-    }
-    axios.post(`${rootUrl}/api/deleteProgressId`, qs.stringify(submitData))
-      .then(res=>{
-          _this.delete(record.id)
-          emitter.emit("callMe", {'id':record.id, 'progressId': record.progressId, 'progress': record.progressPercent})
-      })
-      .catch(error=>{
-          console.log('res=>',error);            
-      })
-  };
+  // deleteItem = (record, e) => {
+  //   e.preventDefault();
+  //   const _this = this
+  //   let submitData = {
+  //     'id': record.id
+  //   }
+  //   axios.post(`${rootUrl}/api/deleteProgressId`, qs.stringify(submitData))
+  //     .then(res=>{
+  //         _this.delete(record.id)
+  //         emitter.emit("callMe", {'id':record.id, 'progressId': record.progressId, 'progress': record.progressPercent})
+  //     })
+  //     .catch(error=>{
+  //         console.log('res=>',error);            
+  //     })
+  // };
 
-  detailClick = (record, e) => {
-    e.preventDefault();
-    this.props.history.push('/rdprogress?id=' + record.id)
-  }
 
   auditChange = (id, audit) => {
     let pageData = this.state.dataSource
@@ -162,9 +163,9 @@ export default class ProgressTable extends Component {
       .then(res=>{
         if(res.data.data && res.data.data[0]){
           _this.inputState(1)
-          Message.success('修改权限已开启')
+          Message.success('编辑权限已开启')
         }else{
-          Message.error('修改码错误')
+          Message.error('编辑码错误')
         }
       })
       .catch(error=>{
@@ -172,13 +173,19 @@ export default class ProgressTable extends Component {
           Message.error('服务器错误，请联系信息中心技术人员')        
       })
     }else{
-      Message.error('请输入修改码')
+      Message.error('请输入编辑码')
     }
   };
 
   inputChange = (value)=> {
     this.setState({
       input: value
+    })
+  }
+
+  projectInputChange = (input) => {
+    this.setState({
+      projectInput: input
     })
   }
 
@@ -259,17 +266,129 @@ export default class ProgressTable extends Component {
         >
           {_data.progressAudit ? '驳回' : '通过'}
         </a>
-        <a 
+        {/* <a 
           href="#" 
           className={styles.operationItem}
           target="_blank"
           onClick={this.deleteItem.bind(this, record)}
         >
           删除
-        </a>
+        </a> */}
       </div>
     );
   };
+
+  onOpenTextCustomized = () => {
+    this.setState({
+        textCustomizedVisible: true
+    });
+  };
+
+  onCloseTextCustomized = () => {
+    this.setState({
+        textCustomizedVisible: false
+    });
+  };
+
+  onOkTextCustomized = () => {
+    const _this = this
+    const submitData = {
+      id: this.props.pageId,
+      projectAudit: 1
+    }
+    if(this.state.projectInput){
+      // Message.loading('正在验证权限')
+      Message.show({
+        type: 'loading',
+        content: '正在验证权限',
+        duration: 0,
+      })
+      axios.get(`${rootUrl}/api/editCode?editCode=${this.state.projectInput}`)
+      .then(res=>{
+        if(res.data.data && res.data.data[0]){
+          Message.show({
+            type: 'loading',
+            content: '验证成功，正在发送数据',
+            duration: 0,
+          })
+          _this.submitProjectAudit(submitData)
+        }else{
+          Message.error('编辑码错误')
+        }
+      })
+      .catch(error=>{
+          console.log('res=>',error);
+          Message.error('服务器错误，请联系信息中心技术人员')        
+      })
+    }else{
+      Message.error('请输入编辑码')
+    }
+  };
+  onCancelTextCustomized = () => {
+    const _this = this
+    const submitData = {
+      id: this.props.pageId,
+      projectAudit: 2
+    }
+    if(this.state.projectInput){
+      // Message.loading('正在验证权限')
+      Message.show({
+        type: 'loading',
+        content: '正在验证权限',
+        duration: 0,
+      })
+      axios.get(`${rootUrl}/api/editCode?editCode=${this.state.projectInput}`)
+      .then(res=>{
+        if(res.data.data && res.data.data[0]){
+          Message.show({
+            type: 'loading',
+            content: '验证成功，正在发送数据',
+            duration: 0,
+          })
+          _this.submitProjectAudit(submitData)
+        }else{
+          Message.error('编辑码错误')
+        }
+      })
+      .catch(error=>{
+          console.log('res=>',error);
+          Message.error('服务器错误，请联系信息中心技术人员')        
+      })
+    }else{
+      Message.error('请输入编辑码')
+    }
+  };
+
+  submitProjectAudit = (submitData) => {
+    const _this = this
+    Message.show({
+      type: 'loading',
+      content: '正在提交数据',
+      duration: 0,
+    })
+    axios.post(`${rootUrl}/api/projectAudit`, qs.stringify(submitData))
+    .then(res=>{
+      this.setState({
+        textCustomizedVisible: false,
+        projectAudit: submitData.projectAudit
+      });
+      if(!res.code){
+        _this.inputState(1)
+        Message.success('审核完成')
+        console.log(submitData.projectAudit)
+        emitter.emit("callMe", {'projectAudit': submitData.projectAudit})
+      }else{
+        Message.error('审核失败')
+      }
+    })
+    .catch(error=>{
+        console.log('res=>',error);
+        this.setState({
+          textCustomizedVisible: false
+        });
+        Message.error('服务器错误，请联系信息中心技术人员')        
+    })
+  }
 
   render() {
     const {location} = this.props
@@ -283,10 +402,18 @@ export default class ProgressTable extends Component {
             增加节点
           </Button>
           <Button
+            type="secondary"
             onClick={this.editProgressNode}
             style={{marginBottom: '20px'}}
           >
             编辑节点
+          </Button>
+          <Button
+            type="primary"
+            onClick={this.onOpenTextCustomized}
+            style={{marginBottom: '20px',float: 'right'}}
+          >
+            项目委员会审核
           </Button>
           <Table
             rowProps={(record, index) => {
@@ -319,7 +446,6 @@ export default class ProgressTable extends Component {
             />
             <Table.Column 
               title="节点状态" 
-              dataIndex="progressDetail" 
               width={140} 
               cell={this.renderProgressStatus}
             />
@@ -332,7 +458,7 @@ export default class ProgressTable extends Component {
             /> : ''}
           </Table>
           <Dialog
-            title="修改节点"
+            title="编辑节点"
             visible={this.state.visible}
             autoFocus
             onOk={this.onOk.bind(this, 'okClick')}
@@ -347,6 +473,26 @@ export default class ProgressTable extends Component {
               onChange={this.inputChange.bind(this)}
               state={this.state.inputState}
             />
+            </Dialog>
+            <Dialog
+              title="项目审核"
+              visible={this.state.textCustomizedVisible}
+              onOk={this.onOkTextCustomized}
+              onCancel={this.onCancelTextCustomized}
+              onClose={this.onCloseTextCustomized}
+              okProps={{children: '通过', className: 'asdf'}}
+              cancelProps={{children: '驳回'}}
+              >
+              <p>是否通过该项目的审核？（此项仅限【项目委员会成员】审核）</p>
+              <Input 
+                placeholder="请输入您的编辑码" 
+                aria-label="Medium" 
+                aria-labelledby="J_InputMedium" 
+                onChange={this.projectInputChange.bind(this)}
+                state={this.state.inputState}
+              />
+              <p></p>
+              
             </Dialog>
         </div>
       </div>

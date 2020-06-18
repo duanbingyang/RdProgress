@@ -80,6 +80,8 @@ export default class Index extends Component {
           pageData.progressTime = moment(parseInt(pageData.progressTime)*1000).format("YYYY-MM-DD")
           _this.progressDeadline = pageData.progressDeadline
           _this.progressRealMoney = pageData.progressRealMoney
+          _this.progressEdit = pageData.progressEdit
+          // todo  
           _this.setState({
             value: res.data.data[0],
             mainProjectName: mainProjectName
@@ -110,7 +112,15 @@ export default class Index extends Component {
 
   
   pageJump = (obj) => {
-    this.props.history.push(`/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}`)
+    this.props.history.push(`/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}&projectAudit=${this.props.location.state.projectAudit}`)
+    // this.props.history.push({
+    //   pathname: `/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}&projectAudit=${this.props.location.state.projectAudit}`, // 待跳转的页面URL
+    //   state: { 
+    //     id: obj.data.pageId,
+    //     name: obj.data.mainProjectName,
+    //     projectAudit: this.props.location.state.projectAudit
+    //   }, 
+    // })
   }
 
   submit = (value, error) => {
@@ -169,13 +179,13 @@ export default class Index extends Component {
                 <DatePicker disabled style={{width: '100%'}} name="progressTime" />
               </FormItem>
 
-              <FormItem {...formItemLayout} label="主要实施节点："
+              {/* <FormItem {...formItemLayout} label="主要实施节点："
                 required
                 requiredMessage="主要实施节点必须填写"
                 style={{display: 'none'}}
               >
                 <Input disabled name="progressDetail" className={styles.inputWidth} />
-              </FormItem>
+              </FormItem> */}
 
               <FormItem {...formItemLayout} label="计划费用："
                 required

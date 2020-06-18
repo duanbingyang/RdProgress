@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { Step, Button } from '@alifd/next';
-import styles from './index.module.scss';
+import React, { Component } from 'react'
+import { Step, Button, Dialog } from '@alifd/next'
+import styles from './index.module.scss'
 import emitter from "./../../ev"
+import URL from 'url'
 
 const { Item: StepItem } = Step;
 const { Group: ButtonGroup } = Button;
@@ -15,10 +16,13 @@ export default class SimpleStep extends Component {
 
   constructor(props) {
     super(props);
+    console.log(this.props.projectAudit)
     this.state = {
       totalFinishSign: true,
       itemFinishSign: true,
       pageData: this.props.componentData,
+      projectMoney: 0,
+      projectAudit: 0,
       activeKey: [
         [
           {
@@ -72,19 +76,30 @@ export default class SimpleStep extends Component {
     const _this = this;
     // 声明一个自定义事件
     // 在组件装载完成以后
+    // 删除节点监听
+    // this.eventEmitter = emitter.addListener("callMe", (obj)=>{
+    //   console.log(obj)
+    //   let Arr = []
+    //   let _progressIdSplit = obj.progressId.split('.')
+    //   for(let i = 0; i < this.state.activeKey.length; i++){
+    //     let newData = this.state.activeKey[i].filter(function(item) {
+    //       return item['id'] != obj.id;
+    //     });
+    //     if(newData && newData.length) {
+    //       Arr.push(newData)
+    //     }
+    //   }
+    //   this.setState({
+    //     activeKey: Arr,
+    //   })
+    // });
+    // 删除节点监听结束
+    
     this.eventEmitter = emitter.addListener("callMe", (obj)=>{
+      console.log(obj)
       let Arr = []
-      let _progressIdSplit = obj.progressId.split('.')
-      for(let i = 0; i < this.state.activeKey.length; i++){
-        let newData = this.state.activeKey[i].filter(function(item) {
-          return item['id'] != obj.id;
-        });
-        if(newData && newData.length) {
-          Arr.push(newData)
-        }
-      }
       this.setState({
-        activeKey: Arr,
+        projectAudit: obj.projectAudit,
       })
     });
     this.initData(this.state.pageData)
@@ -98,6 +113,7 @@ export default class SimpleStep extends Component {
   initData(arr) {
     let initArr = []
     let itemArr = []
+    let _projectMoney = 0
     for(let i = 0; i < arr.length; i++) {
       let arrItem = arr[i]
       let progressId = arrItem['progressId']
@@ -105,6 +121,10 @@ export default class SimpleStep extends Component {
       let nextArrItem = i < arr.length-1 ? arr[i + 1] : []
       let nextProgressId = i < arr.length-1 ? nextArrItem['progressId'] : ''
       let nextProgressIdSplit = i < arr.length-1 ?  nextProgressId.split('.') : []
+
+      if(progressIdSplit[1]) {
+        _projectMoney = _projectMoney + parseInt(arrItem.progressMoney)
+      }
 
       itemArr.push({
         'id': arrItem.id,
@@ -157,6 +177,8 @@ export default class SimpleStep extends Component {
     }
     this.setState({
       activeKey: initArr,
+      projectMoney: _projectMoney,
+      projectAudit: this.props.projectAudit
     })
   }
 
@@ -221,6 +243,17 @@ export default class SimpleStep extends Component {
 
     return (
       <div title="项目节点">
+        <div className={styles.projectBox}>
+          <p className={styles.title}>
+            {this.props.mainProjectName}
+            {
+              this.state.projectAudit == 1 ? 
+              <span className={styles.auditPass}>审核通过</span> : 
+              this.state.projectAudit == 2 ? <span className={styles.auditNopass}>被驳回</span> :
+              <span className={styles.auditWait}>待审核</span>}
+          </p>
+          <p className={styles.money}>项目预算：{this.state.projectMoney}</p>
+        </div>
         <div className={styles.pageBox}>
           {this.mainProgress(this.state.activeKey)}
           <div style={{textAlign: 'center'}} className={styles.nextStep}> 

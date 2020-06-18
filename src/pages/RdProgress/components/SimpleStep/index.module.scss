@@ -24,7 +24,7 @@
   width: 16px;
   height: 16px;
   border-radius: 30px;
-  background-color: #FFF;
+  background-color: #ffffff;
   border: 1px solid #00CB15;
   vertical-align: middle;
   margin-right: 10px;
@@ -52,3 +52,40 @@
   margin-right: 10px;
   margin-left: 30px;
 };
+.projectBox{
+  font-size: 30px;
+};
+.title{
+  font-size: 24px;
+  line-height: 24px;
+}
+.auditPass{
+  color: #00CB15;
+  display: inline-block;
+  margin-left: 20px;
+  padding:2px 5px;
+  border: 2px solid #00CB15;
+  border-radius: 8px;
+  font-size: 20px;
+}
+.auditNopass{
+  color: #FF1A1A;
+  display: inline-block;
+  margin-left: 20px;
+  padding:2px 5px;
+  border: 2px solid #FF1A1A;
+  border-radius: 8px;
+  font-size: 20px;
+}
+.auditWait{
+  color: #FFB71A;
+  display: inline-block;
+  margin-left: 20px;
+  padding:2px 5px;
+  border: 2px solid #FFB71A;
+  border-radius: 8px;
+  font-size: 20px;
+};
+.money{
+  font-size: 16px;
+}
