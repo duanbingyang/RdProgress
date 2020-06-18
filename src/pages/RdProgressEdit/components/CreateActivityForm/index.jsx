@@ -172,6 +172,7 @@ export default class Index extends Component {
               <FormItem {...formItemLayout} label="主要实施节点："
                 required
                 requiredMessage="主要实施节点必须填写"
+                style={{display: 'none'}}
               >
                 <Input disabled name="progressDetail" className={styles.inputWidth} />
               </FormItem>
