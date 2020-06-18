@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 //without 路由跳转依赖结束
 import moment from 'moment'
-import { Table, Progress, Pagination, Button } from '@alifd/next'
+import { Table, Progress, Pagination, Button, Dialog, Input, Message } from '@alifd/next'
 import { Link } from 'react-router-dom'
 import styles from  './index.module.scss'
 import axios from 'axios'
@@ -28,6 +28,10 @@ export default class ProgressTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      input: '',
+      canEdit: false,
+      visible: false,
+      inputState: 'error',
       dataSource: props.componentData,
     };
   }
@@ -135,6 +139,76 @@ export default class ProgressTable extends Component {
         console.log('res=>',error);            
     })
   }
+  
+  onOpen = () => {
+    this.setState({
+        visible: true
+    });
+  };
+  
+  onClose = () => {
+    this.setState({
+        visible: false
+    });
+  };
+
+  onOk = () => {
+    const _this = this
+    if(this.state.input){
+      // Message.loading('正在验证权限')
+      Message.show({
+        type: 'loading',
+        content: '正在验证权限',
+        duration: 0,
+      })
+      axios.get(`${rootUrl}/api/editCode?editCode=${this.state.input}`)
+      .then(res=>{
+        console.log(!res.data.data[0])
+        if(res.data.data && res.data.data[0]){
+          _this.inputState(1)
+          Message.success('修改权限已开启')
+        }else{
+          Message.error('修改码错误')
+        }
+      })
+      .catch(error=>{
+          console.log('res=>',error);
+          Message.error('服务器错误，请联系信息中心技术人员')        
+      })
+    }else{
+      Message.error('请输入修改码')
+    }
+  };
+
+  inputChange = (value)=> {
+    this.setState({
+      input: value
+    })
+  }
+
+  inputState = (state) => {
+    let _canEdit = false
+    let _visible = true
+    if(state) {
+      console.log(state)
+      if(state == 1){
+        _canEdit = true
+        _visible = false
+      }
+    }else{
+      _canEdit = true
+    }
+    this.setState({
+      canEdit: _canEdit,
+      visible: _visible
+    })
+  }
+
+  editProgressNode = () => {
+    this.setState({
+      visible: true
+    });
+  }
 
   renderProgressStatus= (value, index, record) => {
     const _data = this.state.dataSource[index]
@@ -213,6 +287,12 @@ export default class ProgressTable extends Component {
           >
             增加节点
           </Button>
+          <Button
+            onClick={this.editProgressNode}
+            style={{marginBottom: '20px'}}
+          >
+            编辑节点
+          </Button>
           <Table
             rowProps={(record, index) => {
               return {
@@ -248,13 +328,31 @@ export default class ProgressTable extends Component {
               width={140} 
               cell={this.renderProgressStatus}
             />
+            {this.state.canEdit ? 
             <Table.Column
               title="操作"
               dataIndex="operation"
               width={120}
               cell={this.renderOperations}
-            />
+            /> : ''}
           </Table>
+          <Dialog
+            title="修改节点"
+            visible={this.state.visible}
+            autoFocus
+            onOk={this.onOk.bind(this, 'okClick')}
+            onCancel={this.onClose.bind(this, 'cancelClick')}
+            onClose={this.onClose}
+            cancelProps={{'aria-label':'cancel'}}
+            okProps={{'aria-label':'ok'}}>
+            <Input 
+              placeholder="请输入您的编辑码" 
+              aria-label="Medium" 
+              aria-labelledby="J_InputMedium" 
+              onChange={this.inputChange.bind(this)}
+              state={this.state.inputState}
+            />
+            </Dialog>
         </div>
       </div>
     );
