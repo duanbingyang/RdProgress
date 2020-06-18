@@ -7,9 +7,9 @@ import PropTypes from 'prop-types'
 //without 路由跳转依赖结束
 import SimpleStep from './components/SimpleStep'
 import ProgressTable from './components/ProgressTable'
-const rootUrl = 'http://localhost:3000'   
+// const rootUrl = 'http://localhost:3000'   
 //腾讯云服务地址
-// const rootUrl = 'http://49.234.40.20:3000'  
+const rootUrl = 'http://49.234.40.20:3000'  
 let pageData = ''
 
 @withRouter

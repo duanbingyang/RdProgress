@@ -11,10 +11,10 @@ import styles from  './index.module.scss'
 import axios from 'axios'
 import qs from 'qs'
 import emitter from "./../../ev"
-const rootUrl = 'http://localhost:3000'
+// const rootUrl = 'http://localhost:3000'
 const storage = window.sessionStorage;
 //腾讯云服务地址
-// const rootUrl = 'http://49.234.40.20:3000'
+const rootUrl = 'http://49.234.40.20:3000'
 
 @withRouter
 export default class ProgressTable extends Component {
