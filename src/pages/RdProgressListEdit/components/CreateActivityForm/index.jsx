@@ -28,9 +28,9 @@ const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
-const rootUrl = 'http://localhost:3000'
+// const rootUrl = 'http://localhost:3000'
 //腾讯云服务地址
-// const rootUrl = 'http://49.234.40.20:3000'  
+const rootUrl = 'http://49.234.40.20:3000'  
 
 
 const formItemLayout = {

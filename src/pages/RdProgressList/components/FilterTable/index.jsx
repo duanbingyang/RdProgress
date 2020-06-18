@@ -8,9 +8,9 @@ import moment from 'moment'
 import axios from 'axios'
 import { Table, Pagination, Dialog, Input } from '@alifd/next'
 import styles from './index.module.scss'
-const rootUrl = 'http://localhost:3000'
+// const rootUrl = 'http://localhost:3000'
 //腾讯云服务地址
-// const rootUrl = 'http://49.234.40.20:3000'  
+const rootUrl = 'http://49.234.40.20:3000'  
 
 @withRouter
 export default class EnhanceTable extends Component {

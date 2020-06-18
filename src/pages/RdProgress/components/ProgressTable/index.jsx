@@ -11,9 +11,9 @@ import styles from  './index.module.scss'
 import axios from 'axios'
 import qs from 'qs'
 import emitter from "./../../ev"
-const rootUrl = 'http://localhost:3000'   
+// const rootUrl = 'http://localhost:3000'
 //腾讯云服务地址
-// const rootUrl = 'http://49.234.40.20:3000'  
+const rootUrl = 'http://49.234.40.20:3000'
 
 @withRouter
 export default class ProgressTable extends Component {
@@ -96,7 +96,6 @@ export default class ProgressTable extends Component {
     }
     axios.post(`${rootUrl}/api/deleteProgressId`, qs.stringify(submitData))
       .then(res=>{
-          console.log('res=>',res);
           _this.delete(record.id)
           emitter.emit("callMe", {'id':record.id, 'progressId': record.progressId, 'progress': record.progressPercent})
       })
@@ -112,7 +111,6 @@ export default class ProgressTable extends Component {
 
   auditChange = (id, audit) => {
     let pageData = this.state.dataSource
-    console.log(audit)
     for(let i = 0; i < pageData.length; i++){
       if(pageData[i]['id'] == id) {
         pageData[i]['progressAudit'] = audit
@@ -129,7 +127,6 @@ export default class ProgressTable extends Component {
     let value = {}
     value.id = record.id
     value.progressAudit = !record.progressAudit
-    console.log(value)
 
     axios.post(`${rootUrl}/api/auth`, qs.stringify(value))
     .then(res=>{
@@ -163,7 +160,6 @@ export default class ProgressTable extends Component {
       })
       axios.get(`${rootUrl}/api/editCode?editCode=${this.state.input}`)
       .then(res=>{
-        console.log(!res.data.data[0])
         if(res.data.data && res.data.data[0]){
           _this.inputState(1)
           Message.success('修改权限已开启')
@@ -190,7 +186,6 @@ export default class ProgressTable extends Component {
     let _canEdit = false
     let _visible = true
     if(state) {
-      console.log(state)
       if(state == 1){
         _canEdit = true
         _visible = false

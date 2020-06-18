@@ -1,8 +1,8 @@
 import { createApp, request, IAppConfig } from 'ice';
 import React from 'react';
-const rootUrl = 'http://localhost:3000'   
+// const rootUrl = 'http://localhost:3000' 
 //腾讯云服务地址
-// const rootUrl = 'http://49.234.40.20:3000'  
+const rootUrl = 'http://49.234.40.20:3000'  
 const appConfig = {
   app: {
     rootId: 'ice-container'
