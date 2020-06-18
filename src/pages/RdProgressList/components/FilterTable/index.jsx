@@ -36,7 +36,6 @@ export default class EnhanceTable extends Component {
   componentDidMount() {
     // this.axiosForList()
     if(this.props.location.state && this.props.location.state.viewCode) {
-      console.log(this.props.location.state.viewCode, '========================')
       this.axiosForList(this.props.location.state.viewCode)
     }else{
       this.setState({
@@ -51,7 +50,6 @@ export default class EnhanceTable extends Component {
     const getUrl = viewCode ? `${rootUrl}/api/projectListUseId?viewCode=` + viewCode : `${rootUrl}/api/projectList`
     axios.get(getUrl)
         .then(function (response) {
-           console.log(response.data.data[0])
             _this.setState({
               value: response.data.data,
             });
@@ -61,7 +59,15 @@ export default class EnhanceTable extends Component {
             //     id: response.data.data[0]['id']
             //   }, 
             // })
-            history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}&projectAudit=${response.data.data[0]['audit']}`)  
+            // history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}&projectAudit=${response.data.data[0]['audit']}`) 
+            history.push({
+              pathname: `/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}`, // 待跳转的页面URL
+              state: { 
+                id: response.data.data[0]['id'],
+                name: response.data.data[0]['projectName'],
+                projectAudit: response.data.data[0]['audit']
+              }, 
+            }) 
         })
         .catch(function (error) {
             console.log(error);
@@ -89,10 +95,10 @@ export default class EnhanceTable extends Component {
     // TODO: record 为该行所对应的数据，可自定义操作行为
   };
 
-  detailClick = (record, e) => {
-    e.preventDefault();
-    this.props.history.push('/rdprogress?id=' + record.id)
-  }
+  // detailClick = (record, e) => {
+  //   e.preventDefault();
+  //   this.props.history.push('/rdprogress?id=' + record.id)
+  // }
 
   onOpen = () => {
     this.setState({
@@ -130,14 +136,14 @@ export default class EnhanceTable extends Component {
         {/* <a href={'/#/rdprogress?id=' + record.id} className={styles.operationItem}>
           详情
         </a> */}
-        <a 
+        {/* <a 
           // href={'/#/rdprogress?id=' + record.id} 
           href='#'
           onClick={this.detailClick.bind(this, record)}
           className={styles.operationItem}
         >
           详情
-        </a>
+        </a> */}
         {/* <a href="#" className={styles.operationItem} target="_blank">
           分类
         </a> */}

@@ -48,7 +48,6 @@ export default class Index extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props)
     this.state = {
       pageId: '',
       mainProjectName: '',
@@ -67,8 +66,8 @@ export default class Index extends Component {
   }
 
   componentDidMount() {
-    let id = this.props.location.state.pageId;
-    let mainProjectName = this.props.location.state.mainProjectName;
+    let id = this.props.location.state && this.props.location.state.pageId ? this.props.location.state.pageId : '';
+    let mainProjectName = this.props.location.state && this.props.location.state.mainProjectName ? this.props.location.state.mainProjectName : '';
     this.setState({
       pageId: id,
       mainProjectName: mainProjectName
@@ -88,15 +87,15 @@ export default class Index extends Component {
 
   
   pageJump = (obj) => {
-    this.props.history.push(`/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}&projectAudit=${this.props.location.state.projectAudit}`)
-    // this.props.history.push({
-    //   pathname: `/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}&projectAudit=${this.props.location.state.projectAudit}`, // 待跳转的页面URL
-    //   state: { 
-    //     id: obj.data.pageId,
-    //     name: obj.data.mainProjectName,
-    //     projectAudit: this.props.location.state.projectAudit
-    //   }, 
-    // })
+    // this.props.history.push(`/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}&projectAudit=${this.props.location.state.projectAudit}`)
+    this.props.history.push({
+      pathname: `/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}`, // 待跳转的页面URL
+      state: { 
+        id: obj.data.pageId,
+        name: obj.data.mainProjectName,
+        projectAudit: this.props.location.state.projectAudit
+      }, 
+    })
   }
 
   submit = (value, error) => {

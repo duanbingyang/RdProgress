@@ -16,7 +16,6 @@ export default class SimpleStep extends Component {
 
   constructor(props) {
     super(props);
-    console.log(this.props.projectAudit)
     this.state = {
       totalFinishSign: true,
       itemFinishSign: true,
@@ -96,7 +95,6 @@ export default class SimpleStep extends Component {
     // 删除节点监听结束
     
     this.eventEmitter = emitter.addListener("callMe", (obj)=>{
-      console.log(obj)
       let Arr = []
       this.setState({
         projectAudit: obj.projectAudit,

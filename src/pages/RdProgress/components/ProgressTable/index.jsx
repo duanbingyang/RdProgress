@@ -12,6 +12,7 @@ import axios from 'axios'
 import qs from 'qs'
 import emitter from "./../../ev"
 const rootUrl = 'http://localhost:3000'
+const storage = window.sessionStorage;
 //腾讯云服务地址
 // const rootUrl = 'http://49.234.40.20:3000'
 
@@ -27,7 +28,6 @@ export default class ProgressTable extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props, '=================')
     this.state = {
       projectAudit: this.props.projectAudit ? this.props.projectAudit : 0,
       input: '',
@@ -164,6 +164,7 @@ export default class ProgressTable extends Component {
         if(res.data.data && res.data.data[0]){
           _this.inputState(1)
           Message.success('编辑权限已开启')
+          storage.setItem('editSign', 1);
         }else{
           Message.error('编辑码错误')
         }
@@ -207,9 +208,14 @@ export default class ProgressTable extends Component {
   }
 
   editProgressNode = () => {
-    this.setState({
-      visible: true
-    });
+    const editSign = storage.getItem('editSign')
+    if(editSign) {
+      this.inputState(editSign)
+    }else{
+      this.setState({
+        visible: true
+      });
+    }
   }
 
   renderProgressStatus= (value, index, record) => {
@@ -296,32 +302,31 @@ export default class ProgressTable extends Component {
       id: this.props.pageId,
       projectAudit: 1
     }
-    if(this.state.projectInput){
-      // Message.loading('正在验证权限')
-      Message.show({
-        type: 'loading',
-        content: '正在验证权限',
-        duration: 0,
-      })
-      axios.get(`${rootUrl}/api/editCode?editCode=${this.state.projectInput}`)
-      .then(res=>{
-        if(res.data.data && res.data.data[0]){
-          Message.show({
-            type: 'loading',
-            content: '验证成功，正在发送数据',
-            duration: 0,
-          })
-          _this.submitProjectAudit(submitData)
-        }else{
-          Message.error('编辑码错误')
-        }
-      })
-      .catch(error=>{
-          console.log('res=>',error);
-          Message.error('服务器错误，请联系信息中心技术人员')        
-      })
+    const editSign = storage.getItem('editSign')
+    if(editSign) {
+      _this.submitProjectAudit(submitData)
     }else{
-      Message.error('请输入编辑码')
+      if(this.state.projectInput){
+        Message.show({
+          type: 'loading',
+          content: '正在验证权限',
+          duration: 0,
+        })
+        axios.get(`${rootUrl}/api/editCode?editCode=${this.state.projectInput}`)
+        .then(res=>{
+          if(res.data.data && res.data.data[0]){
+            _this.submitProjectAudit(submitData)
+          }else{
+            Message.error('编辑码错误')
+          }
+        })
+        .catch(error=>{
+            console.log('res=>',error);
+            Message.error('服务器错误，请联系信息中心技术人员')        
+        })
+      }else{
+        Message.error('请输入编辑码')
+      }
     }
   };
   onCancelTextCustomized = () => {
@@ -330,32 +335,31 @@ export default class ProgressTable extends Component {
       id: this.props.pageId,
       projectAudit: 2
     }
-    if(this.state.projectInput){
-      // Message.loading('正在验证权限')
-      Message.show({
-        type: 'loading',
-        content: '正在验证权限',
-        duration: 0,
-      })
-      axios.get(`${rootUrl}/api/editCode?editCode=${this.state.projectInput}`)
-      .then(res=>{
-        if(res.data.data && res.data.data[0]){
-          Message.show({
-            type: 'loading',
-            content: '验证成功，正在发送数据',
-            duration: 0,
-          })
-          _this.submitProjectAudit(submitData)
-        }else{
-          Message.error('编辑码错误')
-        }
-      })
-      .catch(error=>{
-          console.log('res=>',error);
-          Message.error('服务器错误，请联系信息中心技术人员')        
-      })
+    const editSign = storage.getItem('editSign')
+    if(editSign) {
+      _this.submitProjectAudit(submitData)
     }else{
-      Message.error('请输入编辑码')
+      if(this.state.projectInput){
+        Message.show({
+          type: 'loading',
+          content: '正在验证权限',
+          duration: 0,
+        })
+        axios.get(`${rootUrl}/api/editCode?editCode=${this.state.projectInput}`)
+        .then(res=>{
+          if(res.data.data && res.data.data[0]){
+            _this.submitProjectAudit(submitData)
+          }else{
+            Message.error('编辑码错误')
+          }
+        })
+        .catch(error=>{
+            console.log('res=>',error);
+            Message.error('服务器错误，请联系信息中心技术人员')        
+        })
+      }else{
+        Message.error('请输入编辑码')
+      }
     }
   };
 
@@ -375,7 +379,6 @@ export default class ProgressTable extends Component {
       if(!res.code){
         _this.inputState(1)
         Message.success('审核完成')
-        console.log(submitData.projectAudit)
         emitter.emit("callMe", {'projectAudit': submitData.projectAudit})
       }else{
         Message.error('审核失败')
@@ -449,7 +452,7 @@ export default class ProgressTable extends Component {
               width={140} 
               cell={this.renderProgressStatus}
             />
-            {this.state.canEdit ? 
+            {this.state.canEdit || storage.getItem('editSign') ? 
             <Table.Column
               title="操作"
               dataIndex="operation"
@@ -484,13 +487,14 @@ export default class ProgressTable extends Component {
               cancelProps={{children: '驳回'}}
               >
               <p>是否通过该项目的审核？（此项仅限【项目委员会成员】审核）</p>
+              {storage.getItem('editSign') ? '' :
               <Input 
                 placeholder="请输入您的编辑码" 
                 aria-label="Medium" 
                 aria-labelledby="J_InputMedium" 
                 onChange={this.projectInputChange.bind(this)}
                 state={this.state.inputState}
-              />
+              />}
               <p></p>
               
             </Dialog>
