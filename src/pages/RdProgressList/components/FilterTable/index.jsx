@@ -53,21 +53,15 @@ export default class EnhanceTable extends Component {
             _this.setState({
               value: response.data.data,
             });
-            // history.push({
-            //   pathname: `/rdprogress?id=${response.data.data[0]['id']}`, // 待跳转的页面URL
+            history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}&projectAudit=${response.data.data[0]['audit']}`) 
+            // _this.props.history.push({
+            //   pathname: `/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}`,
             //   state: { 
-            //     id: response.data.data[0]['id']
+            //     id: response.data.data[0]['id'],
+            //     name: response.data.data[0]['projectName'],
+            //     projectAudit: response.data.data[0]['audit']
             //   }, 
-            // })
-            // history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}&projectAudit=${response.data.data[0]['audit']}`) 
-            history.push({
-              pathname: `/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}`, // 待跳转的页面URL
-              state: { 
-                id: response.data.data[0]['id'],
-                name: response.data.data[0]['projectName'],
-                projectAudit: response.data.data[0]['audit']
-              }, 
-            }) 
+            // }) 
         })
         .catch(function (error) {
             console.log(error);

@@ -27,15 +27,15 @@ export default class RdPrograss extends Component {
       value: '',
       pageId: URL.parse(this.props.location.search, true).query.id,
       projectName: URL.parse(this.props.location.search, true).query.name,
-      // projectAudit: URL.parse(this.props.location.search, true).query.projectAudit,
+      projectAudit: URL.parse(this.props.location.search, true).query.projectAudit,
       currentStep: 0,
       // pageId: this.props.location.state && this.props.location.state.id ? this.props.location.state.id : '',
       // projectName: this.props.location.state && this.props.location.state.name ? this.props.location.state.name : '',
-      projectAudit: this.props.location.state && this.props.location.state.projectAudit ? this.props.location.state.projectAudit : '',
+      // projectAudit: this.props.location.state && this.props.location.state.projectAudit ? this.props.location.state.projectAudit : 1,
     };
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     const _this = this;
     await axios.get(`${rootUrl}/api/progressNodeUseId?id=${this.state.pageId}`)
         .then(function (response) {
@@ -56,7 +56,7 @@ export default class RdPrograss extends Component {
     .then(function (response) {
        let _data = response.data.data
         _this.setState({
-          projectAudit: _data[0]['audit'],
+          projectAudit: _data[0]['audit'] ? _data[0]['audit'] : 0,
         });
     })
     .catch(function (error) {
@@ -76,7 +76,7 @@ export default class RdPrograss extends Component {
 
   render() {
     return (
-      !this.state.value || !this.state.projectAudit ? "loading" : <div className="rd-prograss-page">
+      !this.state.value || (!this.state.projectAudit && this.state.projectAudit!=0) ? "loading" : <div className="rd-prograss-page">
         <SimpleStep 
           componentData={this.state.value} 
           projectAudit={this.state.projectAudit}

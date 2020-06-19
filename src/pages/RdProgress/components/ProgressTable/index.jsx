@@ -11,8 +11,8 @@ import styles from  './index.module.scss'
 import axios from 'axios'
 import qs from 'qs'
 import emitter from "./../../ev"
-// const rootUrl = 'http://localhost:3000'
 const storage = window.sessionStorage;
+// const rootUrl = 'http://localhost:3000'
 //腾讯云服务地址
 const rootUrl = 'http://49.234.40.20:3000'
 
@@ -380,6 +380,7 @@ export default class ProgressTable extends Component {
         _this.inputState(1)
         Message.success('审核完成')
         emitter.emit("callMe", {'projectAudit': submitData.projectAudit})
+        _this.props.history.push(`/rdprogress?id=${submitData.id}&name=${_this.props.mainProjectName}&projectAudit=${submitData.projectAudit}`)
       }else{
         Message.error('审核失败')
       }

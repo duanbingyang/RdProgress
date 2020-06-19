@@ -5,7 +5,14 @@ import React from 'react';
 const rootUrl = 'http://49.234.40.20:3000'  
 const appConfig = {
   app: {
-    rootId: 'ice-container'
+    rootId: 'ice-container',
+    ErrorBoundaryFallback: <div>页面出错</div>,
+    request: [
+      {
+        baseURL: rootUrl,
+        // ...RequestConfig 其他参数
+      }
+    ]
   //   getInitialData: async () => {
   //     // 模拟服务端返回的数据
   //     const data = await request(`${rootUrl}/api/auth`);
