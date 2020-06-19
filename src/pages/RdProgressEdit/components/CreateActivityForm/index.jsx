@@ -84,7 +84,7 @@ export default class Index extends Component {
           // todo  
           _this.setState({
             value: res.data.data[0],
-            mainProjectName: mainProjectName
+            mainProjectName: mainProjectName,
           })
       })
       .catch(error=>{
@@ -163,20 +163,20 @@ export default class Index extends Component {
                 required
                 requiredMessage="节点名称必须填写"
               >
-                <Input disabled name="projectName" className={styles.inputWidth} />
+                <Input disabled={this.props.location.state.projectAudit && this.props.location.state.projectAudit == 1 ? true : false} name="projectName" className={styles.inputWidth} />
               </FormItem>
 
               <FormItem {...formItemLayout} label="节点序号："
                 required
                 requiredMessage="项目节点序号必须填写"
               >
-                <Input disabled name="progressId" className={styles.inputWidth} />
+                <Input disabled={this.props.location.state.projectAudit && this.props.location.state.projectAudit == 1 ? true : false} name="progressId" className={styles.inputWidth} />
               </FormItem>
 
               <FormItem {...formItemLayout} label="计划完成时间：" 
                 required
                 requiredMessage="计划完成时间必须填写">
-                <DatePicker disabled style={{width: '100%'}} name="progressTime" />
+                <DatePicker disabled={this.props.location.state.projectAudit && this.props.location.state.projectAudit == 1 ? true : false} style={{width: '100%'}} name="progressTime" />
               </FormItem>
 
               {/* <FormItem {...formItemLayout} label="主要实施节点："
@@ -191,17 +191,17 @@ export default class Index extends Component {
                 required
                 requiredMessage="计划费用必须填写"
               >
-                <Input disabled name="progressMoney" className={styles.inputWidth} />
+                <Input disabled={this.props.location.state.projectAudit && this.props.location.state.projectAudit == 1 ? true : false} name="progressMoney" className={styles.inputWidth} />
               </FormItem>
 
               <FormItem {...formItemLayout} label="实际费用："
               >
-                <Input disabled={ this.progressRealMoney != '0' ? true : false } name="progressRealMoney" className={styles.inputWidth} />
+                <Input disabled={ this.progressRealMoney != '0' ? this.props.location.state.projectAudit && this.props.location.state.projectAudit == 1 ? true : false : false } name="progressRealMoney" className={styles.inputWidth} />
               </FormItem>
               
               <FormItem {...formItemLayout} label="完成时间：" 
               >
-                <DatePicker disabled={this.progressDeadline ? true : false} name="progressDeadline" style={{width: '100%'}} />
+                <DatePicker disabled={ this.progressRealMoney != '0' ? this.props.location.state.projectAudit && this.props.location.state.projectAudit == 1 ? true : false : false } name="progressDeadline" style={{width: '100%'}} />
               </FormItem>
               
               <FormItem {...formItemLayout} label="完成情况："
