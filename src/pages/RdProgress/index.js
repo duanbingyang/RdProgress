@@ -25,13 +25,13 @@ export default class RdPrograss extends Component {
     super(props);
     this.state = {
       value: '',
-      pageId: URL.parse(this.props.location.search, true).query.id,
-      projectName: URL.parse(this.props.location.search, true).query.name,
-      projectAudit: URL.parse(this.props.location.search, true).query.projectAudit,
+      // pageId: URL.parse(this.props.location.search, true).query.id,
+      // projectName: URL.parse(this.props.location.search, true).query.name,
+      // projectAudit: URL.parse(this.props.location.search, true).query.projectAudit,
       currentStep: 0,
-      // pageId: this.props.location.state && this.props.location.state.id ? this.props.location.state.id : '',
-      // projectName: this.props.location.state && this.props.location.state.name ? this.props.location.state.name : '',
-      // projectAudit: this.props.location.state && this.props.location.state.projectAudit ? this.props.location.state.projectAudit : 1,
+      pageId: this.props.location.state && this.props.location.state.id ? this.props.location.state.id : '',
+      projectName: this.props.location.state && this.props.location.state.name ? this.props.location.state.name : '',
+      projectAudit: this.props.location.state && this.props.location.state.projectAudit ? this.props.location.state.projectAudit : 1,
     };
   }
 

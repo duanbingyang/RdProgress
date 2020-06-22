@@ -11,6 +11,7 @@ import styles from './index.module.scss'
 // const rootUrl = 'http://localhost:3000'
 //腾讯云服务地址
 const rootUrl = 'http://49.234.40.20:3000'  
+const storage = window.sessionStorage;
 
 @withRouter
 export default class EnhanceTable extends Component {
@@ -38,30 +39,37 @@ export default class EnhanceTable extends Component {
     if(this.props.location.state && this.props.location.state.viewCode) {
       this.axiosForList(this.props.location.state.viewCode)
     }else{
-      this.setState({
-        visible: true
-      })
+      if(storage.getItem('viewCode') != 'MedisanRd'){
+        this.setState({
+          visible: true
+        })
+      }else{
+        this.axiosForList()
+      }
     }
   }
 
   axiosForList = (viewCode) => {
-    const _this = this;
-    const { history } = this.props;
-    const getUrl = viewCode ? `${rootUrl}/api/projectListUseId?viewCode=` + viewCode : `${rootUrl}/api/projectList`
+    const _this = this
+    const { history } = this.props
+    // let getUrl
+    let getUrl = viewCode && viewCode != 'MedisanRd' ? `${rootUrl}/api/projectListUseId?viewCode=` + viewCode : `${rootUrl}/api/projectList`
     axios.get(getUrl)
         .then(function (response) {
             _this.setState({
               value: response.data.data,
             });
-            history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}&projectAudit=${response.data.data[0]['audit']}`) 
-            // _this.props.history.push({
-            //   pathname: `/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}`,
-            //   state: { 
-            //     id: response.data.data[0]['id'],
-            //     name: response.data.data[0]['projectName'],
-            //     projectAudit: response.data.data[0]['audit']
-            //   }, 
-            // }) 
+            if(viewCode && viewCode != 'MedisanRd'){
+              // history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}&projectAudit=${response.data.data[0]['audit']}`) 
+              history.push({
+                pathname: `/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}`,
+                state: { 
+                  id: response.data.data[0]['id'],
+                  name: response.data.data[0]['projectName'],
+                  projectAudit: response.data.data[0]['audit']
+                }, 
+              }) 
+            }
         })
         .catch(function (error) {
             console.log(error);
@@ -89,10 +97,18 @@ export default class EnhanceTable extends Component {
     // TODO: record 为该行所对应的数据，可自定义操作行为
   };
 
-  // detailClick = (record, e) => {
-  //   e.preventDefault();
-  //   this.props.history.push('/rdprogress?id=' + record.id)
-  // }
+  detailClick = (record, e) => {
+    e.preventDefault();
+    // this.props.history.push(`/rdprogress?id=${record.id}&name=${record.projectName}&projectAudit=${record.audit}`)
+    this.props.history.push({
+      pathname: `/rdprogress`,
+      state: { 
+        id: record.id,
+        name: record.projectName,
+        projectAudit: record.audit
+      }, 
+    }) 
+  }
 
   onOpen = () => {
     this.setState({
@@ -110,6 +126,7 @@ export default class EnhanceTable extends Component {
     this.setState({
         visible: false
     });
+    storage.setItem('viewCode', this.state.input)
     this.state.input ? this.axiosForList(this.state.input) : false
   };
 
@@ -130,14 +147,14 @@ export default class EnhanceTable extends Component {
         {/* <a href={'/#/rdprogress?id=' + record.id} className={styles.operationItem}>
           详情
         </a> */}
-        {/* <a 
+        <a 
           // href={'/#/rdprogress?id=' + record.id} 
           href='#'
           onClick={this.detailClick.bind(this, record)}
           className={styles.operationItem}
         >
           详情
-        </a> */}
+        </a>
         {/* <a href="#" className={styles.operationItem} target="_blank">
           分类
         </a> */}
