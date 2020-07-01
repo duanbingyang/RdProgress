@@ -5,6 +5,8 @@
   "dependencies": {
     "@alifd/next": "^1.19.4",
     "@alifd/theme-design-pro": "^0.x",
+    "bizcharts": "^4.0.7",
+    "echarts": "^4.8.0",
     "md5": "^2.2.1",
     "md5js": "^1.0.7",
     "moment": "^2.24.0",

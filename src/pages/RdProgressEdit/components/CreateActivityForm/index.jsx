@@ -114,7 +114,7 @@ export default class Index extends Component {
   pageJump = (obj) => {
     // this.props.history.push(`/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}&projectAudit=${this.props.location.state.projectAudit}`)
     this.props.history.push({
-      pathname: `/rdprogress?id=${obj.data.pageId}&name=${obj.data.mainProjectName}`, // 待跳转的页面URL
+      pathname: `/rdprogress`, // 待跳转的页面URL
       state: { 
         id: obj.data.pageId,
         name: obj.data.mainProjectName,

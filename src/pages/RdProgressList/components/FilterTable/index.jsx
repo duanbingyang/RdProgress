@@ -62,7 +62,7 @@ export default class EnhanceTable extends Component {
             if(viewCode && viewCode != 'MedisanRd'){
               // history.push(`/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}&projectAudit=${response.data.data[0]['audit']}`) 
               history.push({
-                pathname: `/rdprogress?id=${response.data.data[0]['id']}&name=${response.data.data[0]['projectName']}`,
+                pathname: `/rdprogress`,
                 state: { 
                   id: response.data.data[0]['id'],
                   name: response.data.data[0]['projectName'],

@@ -104,9 +104,9 @@ export default class SimpleStep extends Component {
   }
 
     // 组件销毁前移除事件监听
-    componentWillUnmount(){
-        emitter.removeListener('callMe', this.eventEmitter._events.callMe);
-    }
+  componentWillUnmount(){
+      emitter.removeListener('callMe', this.eventEmitter._events.callMe);
+  }
 
   initData(arr) {
     let initArr = []

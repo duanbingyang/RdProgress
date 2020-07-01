@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 //without 路由跳转依赖结束
 import SimpleStep from './components/SimpleStep'
 import ProgressTable from './components/ProgressTable'
+import Charts from './components/Charts'
 // const rootUrl = 'http://localhost:3000'   
 //腾讯云服务地址
 const rootUrl = 'http://49.234.40.20:3000'  
@@ -77,6 +78,7 @@ export default class RdPrograss extends Component {
   render() {
     return (
       !this.state.value || (!this.state.projectAudit && this.state.projectAudit!=0) ? "loading" : <div className="rd-prograss-page">
+        <Charts></Charts>
         <SimpleStep 
           componentData={this.state.value} 
           projectAudit={this.state.projectAudit}

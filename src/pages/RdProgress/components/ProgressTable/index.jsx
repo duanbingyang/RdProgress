@@ -263,6 +263,7 @@ export default class ProgressTable extends Component {
 
   renderOperations = (value, index, record) => {
     const _data = this.state.dataSource[index]
+    console.log(this.state.editSign, storage.getItem('editSign'))
     return (
       <div
         className="filter-table-operation"
@@ -280,7 +281,7 @@ export default class ProgressTable extends Component {
         {/* <a href={'/#/rdprogress?id=' + record.id} className={styles.operationItem}>
           详情
         </a> */}
-        {this.state.editSign == 1 || storage.getItem('editSign') == 2 ? 
+        {this.state.editSign == 2 || storage.getItem('editSign') == 2 ? 
         <a 
           href='#' 
           className={styles.operationItem}
@@ -347,6 +348,9 @@ export default class ProgressTable extends Component {
         if(res.data.data && res.data.data[0] && res.data.data[0]['editAudit'] == 3){
           _this.submitProjectAudit(obj.submitData)
           storage.setItem('editSign', res.data.data[0]['editAudit'])
+          this.setState({
+              editSign: res.data.data[0]['editAudit']
+          })
         }else{
           Message.error('编辑码错误或编辑码无对应权限')
         }
@@ -458,7 +462,7 @@ export default class ProgressTable extends Component {
               width={140} 
               cell={this.renderProgressStatus}
             />
-            {this.state.canEdit || storage.getItem('editSign') ? 
+            {this.state.canEdit || (storage.getItem('editSign') && storage.getItem('editSign') != 3) ? 
             <Table.Column
               title="操作"
               dataIndex="operation"
